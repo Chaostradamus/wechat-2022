@@ -18,17 +18,15 @@ function App() {
       const authUser = await Auth.currentAuthenticatedUser({
         bypassCache: true,
       });
-      console.log(authUser);
 
       //query database using auth user id ( subid)
 
       const userData = await API.graphql(
         graphqlOperation(getUser, { id: authUser.attributes.sub })
       );
-      console.log(userData);
       //if there is no user in db create one
       if (userData.data.getUser) {
-        console.log("user already exists in database");
+        console.log("user already exists in DB")
         return;
       }
       const newUser = {
@@ -37,8 +35,8 @@ function App() {
         status: "Hey, I am using WhatsApp",
       };
 
-      const newUserResponse = await API.graphql(
-        graphqlOperation(createUser, { variables: { input: newUser } })
+      await API.graphql(
+        graphqlOperation(createUser, { input: newUser })
       );
     };
 
