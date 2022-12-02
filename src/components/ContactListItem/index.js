@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { createChatRoom, createUserChatRoom } from "../../graphql/mutations";
+import {getCommonChatRoomWithUser} from '../../services/chatRoomService'
 
 dayjs.extend(relativeTime);
 
@@ -12,10 +13,14 @@ const ContactListItem = ({ user }) => {
   const navigation = useNavigation();
 
   const onPress = async () => {
-    console.warn("pressed");
     //check uif we already have a chatroom with user
+    const existingChatRoom = await getCommonChatRoomWithUser(user.id)
+    if (existingChatRoom) {
+       navigation.navigate("Chat", { id: existingChatRoom.id })
+       return
+    }
 
-    //create new chatroom
+    // create new chatroom
     const newChatRoomData = await API.graphql(
       graphOperation(createChatRoom, { input: {} })
     );
@@ -38,6 +43,7 @@ const ContactListItem = ({ user }) => {
       })
     );
     //navigate to newly created chatroom
+    navigation.navigate("Chat", { id: newChatRoom.id });
   };
 
   return (
