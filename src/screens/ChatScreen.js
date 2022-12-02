@@ -11,11 +11,25 @@ import InputBox from "../components/InputBox";
 
 import bg from "../../assets/images/BG.png";
 import messages from "../../assets/data/messages.json";
+import { API, graphlOperation } from "aws-amplify";
+import { getChatRoom } from "../graphql/queries";
 
 const ChatScreen = () => {
+  const [chatRoom, setChatRoom] = useState(null);
+
   const route = useRoute();
   const navigation = useNavigation();
+  const chatroomID = route.params.id;
 
+  useEffect(() => {
+    API.graphql(graphlOperation(getChatRoom, { id: chatroomID })).then(
+      (result) => setChatRoom(result.data?.getChatRoom)
+    );
+  }, []);
+
+  if (chatRoom) {
+    return <ActivityIndicator />;
+  }
   useEffect(() => {
     navigation.setOptions({ title: route.params.name });
   }, [route.params.name]);
@@ -33,7 +47,7 @@ const ChatScreen = () => {
           style={styles.list}
           inverted
         />
-        <InputBox />
+        <InputBox chatroomID={chatroomID} />
       </ImageBackground>
     </KeyboardAvoidingView>
   );

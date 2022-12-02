@@ -2,10 +2,13 @@ import { View, Text, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
+import { Auth } from "aws-amplify";
 
 const Message = ({ message }) => {
-  const isMyMessage = () => {
-    return message.user.id === "u1";
+  const isMyMessage = async () => {
+    const authUser = await Auth.currentAuthenticatedUser();
+
+    return message.userID === authUser.attributes.sub;
   };
 
   return (

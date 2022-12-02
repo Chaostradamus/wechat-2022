@@ -3,14 +3,26 @@ import { useNavigation } from "@react-navigation/native";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useEffect } from "react";
+import { Auth } from "aws-amplify";
 
 dayjs.extend(relativeTime);
 
 const ChatListItem = ({ chat }) => {
   const navigation = useNavigation();
+  const [user, setUser] = useState(null);
 
-  const user = chat.users.items[0].user 
-  
+  useEffect(() => {
+    const fetchUser = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+
+      const userItem = chat.users.items.find(
+        (item) => item.user.id !== authUser.attributes.sub
+      );
+      setUser(userItem?.user);
+    };
+    fetchUser();
+  }, []);
 
   return (
     <Pressable
@@ -68,7 +80,6 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     color: "gray",
-    
   },
 });
 
