@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Auth } from "aws-amplify";
 
 dayjs.extend(relativeTime);
@@ -39,12 +39,12 @@ const ChatListItem = ({ chat }) => {
             {user?.name}
           </Text>
           <Text style={styles.subTitle}>
-            {dayjs(chat.lastMessage?.createdAt).fromNow(true)}
+            {dayjs(chat.LastMessage?.createdAt).fromNow(true)}
           </Text>
         </View>
 
         <Text numberOfLines={2} style={styles.subTitle}>
-          {chat.lastMessage?.text}
+          {chat.LastMessage?.text}
         </Text>
       </View>
     </Pressable>

@@ -3,21 +3,28 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 import { Auth } from "aws-amplify";
+import { useEffect , useState} from "react";
 
 const Message = ({ message }) => {
-  const isMyMessage = async () => {
-    const authUser = await Auth.currentAuthenticatedUser();
+  const [isMe, setIsMe] = useState(false);
 
-    return message.userID === authUser.attributes.sub;
-  };
+  useEffect(() => {
+    const isMyMessage = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+
+      setIsMe(message.userID === authUser.attributes.sub);
+    };
+
+    isMyMessage()
+  }, []);
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: isMyMessage() ? "#DCF8C5" : "white",
-          alignSelf: isMyMessage() ? "flex-end" : "flex-start",
+          backgroundColor: isMe ? "#DCF8C5" : "white",
+          alignSelf: isMe ? "flex-end" : "flex-start",
         },
       ]}
     >

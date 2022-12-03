@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -47,7 +47,7 @@ const ChatScreen = () => {
           style={styles.list}
           inverted
         />
-        <InputBox chatroomID={chatroomID} />
+        <InputBox chatroom={chatRoom} />
       </ImageBackground>
     </KeyboardAvoidingView>
   );
